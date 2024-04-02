@@ -11,4 +11,13 @@ const main = container.querySelector('main')
 
 // INIT //////////////////////////////////////////////////////////////////
 
+app
+  .getForecast('perm')
+  .then((response) => {
+    console.log(response)
+  })
+  .catch((error) => {
+    console.error(error)
+  })
+
 // BIND EVENTS ///////////////////////////////////////////////////////////
