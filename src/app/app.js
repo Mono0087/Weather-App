@@ -1,46 +1,132 @@
 const apiKey = 'd99db5078b9de54907fc002e6b5e179a'
 
-const sortByDays = (timestamps) => {
-  const days = {}
-  days.day1 = []
-  let dayComponent = timestamps[0].dt_txt.split(' ')[0]
-  let i = 1
-  for (const dayPart of timestamps) {
-    const currentDayComponent = dayPart.dt_txt.split(' ')[0]
-    if (currentDayComponent === dayComponent) {
-      days[`day${i}`].push(dayPart)
-    } else {
-      i += 1
-      if (!days[`day${i}`]) days[`day${i}`] = []
-      days[`day${i}`].push(dayPart)
-      dayComponent = currentDayComponent
-    }
-  }
-  return days
+const currentWeather = {
+  locationName: undefined,
+  country: undefined,
+  iconURL: undefined,
+  status: undefined,
+  description: undefined,
+  currTemp: undefined,
+  feelsLikeTemp: undefined,
+  humidity: undefined,
+  windSpeed: undefined,
+  days: [],
 }
 
-const app = {
-  convertMeasure(temp, unit) {
-    if (unit === 'cel') {
-      return (temp - 32) / 1.8
-    }
-    return temp * 1.8 + 32
-  },
+const weekDays = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]
 
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+const openWeatherApi = {
   async getForecast(location) {
+    const sortAndFormatByDays = (timestamps) => {
+      const days = []
+      let dayComponent = timestamps[0].dt_txt.split(' ')[0]
+      const currWeather = {}
+
+      let i = 0
+      timestamps.forEach((timestamp) => {
+        const [currDayComponent, currHourComponent] =
+          timestamp.dt_txt.split(' ')
+        if (currDayComponent !== dayComponent) {
+          if (!days[i].eveningTemp) days[i].eveningTemp = timestamp.main.temp
+          if (!days[i].dayTemp) days[i].dayTemp = timestamp.main.temp
+          if (!days[i].iconURL)
+            days[
+              i
+            ].iconUrl = `https://openweathermap.org/img/wn/${timestamp.weather[0].icon}@2x.png`
+          if (!days[i].description)
+            days[i].description = timestamp.weather[0].description
+          i += 1
+          dayComponent = currDayComponent
+        }
+
+        currWeather.date = `${new Date(dayComponent).getDate()} ${
+          months[new Date(dayComponent).getMonth()]
+        }`
+        currWeather.dayOfWeek = weekDays[new Date(dayComponent).getDay()]
+
+        if (currHourComponent === '09:00:00') {
+          currWeather.dayTemp = timestamp.main.temp
+          currWeather.iconUrl = `https://openweathermap.org/img/wn/${timestamp.weather[0].icon}@2x.png`
+          currWeather.description = timestamp.weather[0].description
+        } else if (currHourComponent === '21:00:00') {
+          currWeather.eveningTemp = timestamp.main.temp
+        }
+        days[i] = { ...currWeather }
+      })
+      return days
+    }
+
+    const currentWeatherResp = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`
+    )
     const forecastResp = await fetch(
       `http://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${apiKey}`
     )
-    const forecastData = await forecastResp.json()
+    const weatherDataRaw = await currentWeatherResp.json()
+    currentWeather.locationName = weatherDataRaw.name
+    currentWeather.country = weatherDataRaw.sys.country
+    currentWeather.iconURL = `https://openweathermap.org/img/wn/${weatherDataRaw.weather[0].icon}@2x.png`
+    currentWeather.status = weatherDataRaw.weather[0].main
+    currentWeather.description = weatherDataRaw.weather[0].description
+    currentWeather.currTemp = weatherDataRaw.main.temp
+    currentWeather.feelsLikeTemp = weatherDataRaw.main.feels_like
+    currentWeather.humidity = weatherDataRaw.main.humidity
+    currentWeather.windSpeed = weatherDataRaw.wind.speed
 
-    const generalInfo = forecastData.city
-    const days = sortByDays(forecastData.list)
+    const daysData = await forecastResp.json()
+    const days = sortAndFormatByDays(daysData.list)
+    currentWeather.days = days
 
-    const weather = { generalInfo, days }
+    return currentWeather
+  },
+}
+
+const Weather = {
+  convertMeasure(temp, measure) {
+    if (measure === 'far') {
+      const far = temp * 1.8 + 32
+      return `${Math.round(far)} °F`
+    }
+    const cel = (temp - 32) / 1.8
+    return `${Math.round(cel)} °C`
+  },
+
+  async getWeatherProxy(location, api) {
+    let weather
+    switch (api) {
+      case 'openWeather': {
+        weather = await openWeatherApi.getForecast(location)
+        break
+      }
+
+      default:
+        break
+    }
     return weather
   },
 }
 
-app.getForecast('perm')
-
-export default app
+export default Weather

@@ -11,10 +11,64 @@
     />
   </head>
   <body>
+    <header>
+      <h1>Weather</h1>
+      <button
+        id="change-measure-btn"
+        class="btn"
+        data-change-measure-btn
+        title="Change measure"
+      >
+        °C
+      </button>
+    </header>
     <div class="container">
-      <header></header>
-      <nav></nav>
-      <main></main>
+      <main>
+        <form id="location-search-form" action="GET" data-location-search-form>
+          <label for="locationInput">Search Location:</label>
+          <input type="text" id="locationInput" data-location-search-input />
+          <div
+            id="general-info-error"
+            class="hidden message"
+            data-general-info-error
+          >
+            <p></p>
+          </div>
+          <div
+            id="general-info-waiting-screen"
+            class="hidden message"
+            general-info-waiting-screen
+          >
+            <p>Please wait...</p>
+          </div>
+        </form>
+
+        <section id="general-info" data-general-info>
+          <div id="general-info-container" data-general-info-container>
+            <h2 id="location-name" data-location-name></h2>
+            <div data-today-temp id="today-temp">
+              <div data-main-temp-info>
+                <p id="current-temp" data-current-temp data-temp></p>
+                <p id="current-temp-description" data-current-temp-desc></p>
+              </div>
+
+              <div id="current-temp-additional">
+                <div id="icon-box" data-current-temp-icon-box></div>
+                <div id="additional-temp">
+                  <p id="feels-like-temp" data-current-feels-like-temp></p>
+                  <p id="current-wind-speed" current-wind-speed></p>
+                  <p id="current-humidity" data-current-humidity></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="forecast" data-forecast>
+          <h2>Forecast for 5 days</h2>
+          <div id="forecast-container" data-forecast-container=""></div>
+        </section>
+      </main>
     </div>
   </body>
 </html>

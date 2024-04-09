@@ -1,23 +1,28 @@
-import app from './app/app'
 import DOM from './app/modules/DOM'
 import './SCSS/style.scss'
 
 // CACHE DOM /////////////////////////////////////////////////////////////
 const container = document.querySelector('.container')
-const nav = container.querySelector('nav')
-const main = container.querySelector('main')
+const searchForm = container.querySelector('[data-location-search-form]')
+const changeMeasureBtn = document.querySelector('[data-change-measure-btn]')
 
 // FUNCTIONS ///////////////////////////////////////////////////////////////
 
 // INIT //////////////////////////////////////////////////////////////////
+searchForm.addEventListener('submit', (Event) => {
+  Event.preventDefault()
+  const location = Event.target.querySelector(
+    '[data-location-search-input]'
+  ).value
+  DOM.renderWeather(location)
+})
 
-app
-  .getForecast('perm')
-  .then((response) => {
-    console.log(response)
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+changeMeasureBtn.addEventListener('click', (Event) => {
+  if (Event.target.innerHTML !== '°F') changeMeasureBtn.innerHTML = '°F'
+  else changeMeasureBtn.innerHTML = '°C'
+  DOM.changeTemperatureMeasure()
+})
+
+DOM.renderWeather('pekin')
 
 // BIND EVENTS ///////////////////////////////////////////////////////////
