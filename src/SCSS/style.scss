@@ -147,6 +147,7 @@ a {
 .message {
   display: none;
   &.show {
+    display: block;
     animation: open 1s ease-in-out 0s 1 normal forwards;
   }
   &.hidden {
@@ -171,16 +172,13 @@ header {
   position: relative;
 }
 
-#change-measure-btn{
+#change-measure-btn {
   position: absolute;
   bottom: 50%;
   top: 50%;
   height: max-content;
   transform: translateY(-50%);
   right: 15px;
-}
-
-main {
 }
 
 #general-info-container * {
@@ -198,21 +196,32 @@ main {
   margin-bottom: 15px;
 }
 
+#main-temp-info {
+  padding-left: 10px;
+}
+
 #icon-box {
   border-radius: 15%;
   background-color: rgba(197, 122, 122, 0.667);
+}
+
+#local-time {
+  font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+}
+
+#current-temp {
+  font-size: clamp(1.2rem, 2.5vw, 2.5rem);
 }
 
 #current-temp-description::first-letter {
   text-transform: capitalize;
 }
 
-#current-temp-additional{
+#current-temp-additional {
   margin-top: 10px;
   display: flex;
   gap: 15px;
 }
-
 
 #forecast {
   padding: 15px;
@@ -221,7 +230,7 @@ main {
 
   h2 {
     color: #fff;
-  font-size: clamp(1.4rem, 2.7vw, 2.5rem);
+    font-size: clamp(1.4rem, 2.7vw, 2.5rem);
     margin-bottom: 10px;
   }
 }
@@ -247,12 +256,12 @@ main {
 
 h3 {
   font-size: clamp(1.1rem, 2.5vw, 2.3rem);
-  &+p{
+  & + p {
     padding-left: 15px;
   }
 }
 
-.weather-container{
+.weather-container {
   display: flex;
   gap: 10px;
 }

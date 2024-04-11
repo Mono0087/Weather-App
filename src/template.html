@@ -37,7 +37,7 @@
           <div
             id="general-info-waiting-screen"
             class="hidden message"
-            general-info-waiting-screen
+            data-general-info-waiting-screen
           >
             <p>Please wait...</p>
           </div>
@@ -47,7 +47,7 @@
           <div id="general-info-container" data-general-info-container>
             <h2 id="location-name" data-location-name></h2>
             <div data-today-temp id="today-temp">
-              <div data-main-temp-info>
+              <div id="main-temp-info" data-main-temp-info>
                 <p id="current-temp" data-current-temp data-temp></p>
                 <p id="current-temp-description" data-current-temp-desc></p>
               </div>
@@ -58,6 +58,7 @@
                   <p id="feels-like-temp" data-current-feels-like-temp></p>
                   <p id="current-wind-speed" current-wind-speed></p>
                   <p id="current-humidity" data-current-humidity></p>
+                  <p id="local-time" data-local-time></p>
                 </div>
               </div>
             </div>
@@ -65,7 +66,7 @@
         </section>
 
         <section id="forecast" data-forecast>
-          <h2>Forecast for 5 days</h2>
+          <h2>Forecast for 6 days</h2>
           <div id="forecast-container" data-forecast-container=""></div>
         </section>
       </main>

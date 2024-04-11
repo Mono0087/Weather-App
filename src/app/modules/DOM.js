@@ -5,6 +5,7 @@ import createElement from '../utils/createElement'
 const container = document.querySelector('body')
 const locationInput = container.querySelector('[data-location-search-input]')
 const locationName = container.querySelector('[data-location-name]')
+const localTime = container.querySelector('[data-local-time]')
 const currentTemp = container.querySelector('[data-current-temp]')
 const currentTempIcon = container.querySelector('[data-current-temp-icon-box]')
 const currentTempDescription = container.querySelector(
@@ -17,7 +18,7 @@ const currentWindSpeed = container.querySelector('[current-wind-speed]')
 const currentHumidity = container.querySelector('[data-current-humidity]')
 const generalInfoError = container.querySelector('[data-general-info-error]')
 const generalInfoWaitScreen = container.querySelector(
-  '[general-info-waiting-screen]'
+  '[data-general-info-waiting-screen]'
 )
 const forecastContainer = container.querySelector('[data-forecast-container]')
 
@@ -54,6 +55,7 @@ const closeErrorMessage = async () => {
 
 const renderWeather = (weather) => {
   locationName.innerHTML = `${weather.locationName} ${weather.country}`
+  localTime.innerHTML = weather.localTime
   currentTempIcon.innerHTML = `<img src='${weather.iconURL}' alt='${weather.status}'>`
   currentTemp.innerHTML = `${Math.round(weather.currTemp)} °C`
   currentTempDescription.innerHTML = weather.description

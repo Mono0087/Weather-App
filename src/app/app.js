@@ -2,6 +2,7 @@ const apiKey = 'd99db5078b9de54907fc002e6b5e179a'
 
 const currentWeather = {
   locationName: undefined,
+  localTime: undefined,
   country: undefined,
   iconURL: undefined,
   status: undefined,
@@ -83,10 +84,16 @@ const openWeatherApi = {
       `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`
     )
     const forecastResp = await fetch(
-      `http://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${apiKey}`
+      `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&appid=${apiKey}`
     )
     const weatherDataRaw = await currentWeatherResp.json()
     currentWeather.locationName = weatherDataRaw.name
+    currentWeather.localTime = new Date(
+      weatherDataRaw.dt * 1000 + weatherDataRaw.timezone * 1000
+    )
+      .toISOString()
+      .split('T')[1]
+      .substring(0, 5)
     currentWeather.country = weatherDataRaw.sys.country
     currentWeather.iconURL = `https://openweathermap.org/img/wn/${weatherDataRaw.weather[0].icon}@2x.png`
     currentWeather.status = weatherDataRaw.weather[0].main
